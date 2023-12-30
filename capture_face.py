@@ -16,6 +16,11 @@ try:
         os.mkdir('dataset')  # 如果没有就新建立dataset文件夹
     else:
         print("\n你已经录入过人脸,正在尝试重新导入\n")
+        #清空dataset文件夹
+        for root, dirs, files in os.walk('dataset'):
+            for name in files:
+                os.remove(os.path.join(root, name))
+        print("\n已经清空dataset文件夹\n")
 except Exception as e:
     print("导入人脸出现问题,请联系管理员", str(e))
 finally:

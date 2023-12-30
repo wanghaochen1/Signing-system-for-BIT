@@ -68,7 +68,7 @@ while capture.isOpened():  # 当打开摄像头的时候
                     ID = 'unknow'
         cv2.putText(frame, str(ID), (x, y-10), font, 0.8, (0, 0, 255), 2)  # 添加字幕
 
-    cv2.putText(frame, '摁 "esc" 退出 ', (10, 20), font, 0.8, (0, 255, 255), 2)  # 在窗口上添加文字，参数依次表示：图像、要添加的文字、文字的位置、字体、字体大小、颜色、粗细
+    cv2.putText(frame, 'press "esc" to quit ', (10, 20), font, 0.8, (0, 255, 255), 2)  # 在窗口上添加文字，参数依次表示：图像、要添加的文字、文字的位置、字体、字体大小、颜色、粗细
     cv2.imshow("picture from a cammre", frame)  # 打开窗口的名称
     if flag > 5:
         sign_name(index[0], name)
