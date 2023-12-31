@@ -1,5 +1,6 @@
 import socket
 import datetime
+import json
 
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -13,17 +14,17 @@ server_socket.bind((host, port))
 
 try:
 # 监听连接
-    server_socket.listen(10)
+    server_socket.listen(1)
 
     print('等待客户端连接...')
 
     # 接受客户端连接
     client_socket, addr = server_socket.accept()
     print('客户端已连接:', addr)
-
     # 接收客户端发送的数据
-    data = client_socket.recv(1024)
-    print('接收到的数据:', data.decode())
+    json_str = client_socket.recv(1024)
+    data = json.loads(json_str.decode())
+    print(data)
 
 
     # 获取当前时间

@@ -3,7 +3,7 @@
 import os
 import tkinter as tk
 import time
-
+import all_function
 def Sign_window(s):
     # BEGIN: abpxx6d04wxr
     # 第四步：设计GUI
@@ -16,18 +16,20 @@ def Sign_window(s):
     windows.geometry('500x600+1000+100')  # 窗口大小（注：x是小写字母x，不能写乘号*），+1000+100表示窗口在屏幕上的位置
 
     # 3. 定义功能函数
-    def function1():
-        os.system('python capture_face.py')  # 执行python capture_face.py命令
-    def function2():
-        os.system('python train.py')  # 执行python train.py命令
-    def function3():
-        os.system('python sign_in.py')  # 执行python sign_in.py命令
+    def capture_face():
+        #os.system('python capture_face.py')  # 执行python capture_face.py命令
+        all_function.capture_face(s)
+    def train_face():
+        all_function.train(s)  # 执行python train.py命令
+    def sign_with_face():
+        all_function.sign_in(s)  # 执行python sign_in.py命令
     def function4():
         os.startfile(os.getcwd()+'/签到表1.xls')  # 打开'签到表1.xls'文件
     def function5():
         os.startfile(os.getcwd()+'/基于OpenCV的人脸识别说明文档.docx')  # 打开说明文档
     def function6():
         windows.destroy()
+        s.close()
     def tick():#实时更新时间
         time_string = time.strftime("%Y年%m月%d日%H:%M:%S")
         clock.config(text=time_string)
@@ -43,13 +45,13 @@ def Sign_window(s):
     tick()#调用tick函数
 
     tk.Button(windows,text='采 集 人 脸 图 像', font=('黑体', 20, 'bold'), fg='white',
-             bg='#0D47A1', command=function1).grid(padx=7, pady=5, sticky=tk.W+tk.E)
+             bg='#0D47A1', command=capture_face).grid(padx=7, pady=5, sticky=tk.W+tk.E)
 
     tk.Button(windows,text='训 练 模 型', font=('黑体', 20, 'bold'), fg='white',
-             bg='#0D47A1', command=function2).grid(padx=7, pady=5, sticky=tk.W+tk.E)
+             bg='#0D47A1', command=train_face).grid(padx=7, pady=5, sticky=tk.W+tk.E)
 
     tk.Button(windows,text='识 别 签 到', font=('黑体', 20, 'bold'), fg='white',
-             bg='#0D47A1', command=function3).grid(padx=7, pady=5, sticky=tk.W+tk.E)
+             bg='#0D47A1', command=sign_with_face).grid(padx=7, pady=5, sticky=tk.W+tk.E)
 
     tk.Button(windows,text='查 看 签 到 表', font=('黑体', 20, 'bold'), fg='white',
              bg='#0D47A1', command=function4).grid(padx=7, pady=5, sticky=tk.W+tk.E)
@@ -63,6 +65,6 @@ def Sign_window(s):
     tk.Button(windows,text='学号:1120210529   姓名：王昊宸', font=('仿宋', 20, 'bold'), fg='black',
              bg='white').grid(padx=20, pady=50, sticky=tk.W+tk.E)
 
-    # 5. 运行
+# 5. 运行
     windows.mainloop()
    
