@@ -8,6 +8,7 @@ from xlutils.copy import copy
 from datetime import datetime
 import cv2
 import time
+import send_client
 
 #人脸采集函数
 def capture_face(s):

@@ -2,6 +2,8 @@ import socket
 import sys
 import tkinter as tk
 import GUI_fun
+import send_client
+import read_from_server
 
 s=None#定义全局变量s，用于指定socket
 Var_Pass=False
@@ -33,23 +35,17 @@ def comp(window_connect,stu_num,stu_password):
     socket_connect('192.168.21.216', 12345)
     print("\n可以开始签到,正在进行登陆认证\n")
     #检查账号密码是否正确
-    if stu_num=='' or stu_password=='':
-        print("\n学号或密码不能为空\n")
-        Var_Pass=False
-        return 
-    elif stu_num != '1120210529':
-        print("\n请使用自己的的账号\n")
-        Var_Pass=False
-        return 
-    elif stu_password != '123456':
-        print("\n密码错误\n")
-        Var_Pass=False
-        return 
-    else:
-        print("\n登陆成功\n")
+    send_client.login(stu_num,stu_password,s)
+    if read_from_server.identify_result(s) :
         Var_Pass=True
+        print("\n登陆成功\n")
         window_connect.destroy()
-        return 
+        return
+    else:
+        Var_Pass=False
+        print("\n登陆失败\n")
+        return
+
 #定义初始连接界面
 def create_window():
     window_connect=tk.Tk()
