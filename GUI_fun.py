@@ -18,7 +18,7 @@ def Sign_window(s,stu_num):
     # 3. 定义功能函数
     def capture_face():
         #os.system('python capture_face.py')  # 执行python capture_face.py命令
-        all_function.capture_face(s)
+        all_function.capture_face(s,stu_num)
     def train_face():
         all_function.train(s)  # 执行python train.py命令
     def sign_with_face():

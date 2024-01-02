@@ -17,9 +17,10 @@ def sign_in(stu_num,sign_time,s):
     print("已发送签到信息")
     return 
 #发送更换人脸信息
-def change_face(s):
+def change_face(s,stu_num):
     data={
-        'usage':'change_face'}
+        'usage':'change_face',
+        'stu_num' : stu_num}
     json_str=json.dumps(data)
     s.sendall(json_str.encode())
     print("已发送更换人脸信息")

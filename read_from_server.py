@@ -14,3 +14,5 @@ def identify_result(s):
     #如果是签到信息：
     if data['usage'] == 'sign_in':
         return data['result']
+    if data['usage'] == 'change_face':
+        return data['result']

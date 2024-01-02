@@ -20,13 +20,6 @@ def socket_connect(host,port):
     print("\n已连接到server\n")
     return s
 
-#定义socket发送和接收函数
-def socket_send_recv(send_data):
-    global s#使用全局变量socket
-    s.sendall(send_data.encode())#发送数据
-    recv_data = s.recv(1024)#接收数据
-    return recv4_data.decode()
-
 
 #定义登陆认证函数
 def comp(window_connect,stu_num,stu_password):

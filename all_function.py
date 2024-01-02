@@ -12,26 +12,32 @@ import send_client
 import read_from_server
 
 #人脸采集函数
-def capture_face(s):
-    font = cv2.FONT_HERSHEY_SIMPLEX    # 定义字体，使用opencv中的FONT_HERSHEY_SIMPLEX字体
-    classifier = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')  # 导入人脸检测级联文件。CascadeClassifier是opencv中做人脸检测时的一个级联分类器，对输入的图片进行分类，判断图像内是否有无人脸
-    try:
-        current_directory = os.getcwd()
-        print(f"\n当前你人脸所在的目录为:{current_directory}\n")
-        if not os.path.exists('dataset'):  # 判断项目目录中是否存在dataset文件（dataset中存放采集到的人脸图像）
-            print('\n你是第一次录入人脸,正在创建dataset文件夹\n')
-            os.mkdir('dataset')  # 如果没有就新建立dataset文件夹
-        else:
-            print("\n你已经录入过人脸,正在尝试重新导入\n")
-            #清空dataset文件夹
-            for root, dirs, files in os.walk('dataset'):
-                for name in files:
-                    os.remove(os.path.join(root, name))
-            print("\n已经清空dataset文件夹\n")
-    except Exception as e:
-        print("导入人脸出现问题,请联系管理员", str(e))
-    finally:
-        count = 0  # 人脸图像的初始数量
+def capture_face(s,stu_number):
+    send_client.change_face(s,stu_number)
+    if read_from_server.identify_result(s):
+        print('同意更换人脸\n')
+        font = cv2.FONT_HERSHEY_SIMPLEX    # 定义字体，使用opencv中的FONT_HERSHEY_SIMPLEX字体
+        classifier = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')  # 导入人脸检测级联文件。CascadeClassifier是opencv中做人脸检测时的一个级联分类器，对输入的图片进行分类，判断图像内是否有无人脸
+        try:
+            current_directory = os.getcwd()
+            print(f"\n当前你人脸所在的目录为:{current_directory}\n")
+            if not os.path.exists('dataset'):  # 判断项目目录中是否存在dataset文件（dataset中存放采集到的人脸图像）
+                print('\n你是第一次录入人脸,正在创建dataset文件夹\n')
+                os.mkdir('dataset')  # 如果没有就新建立dataset文件夹
+            else:
+                print("\n你已经录入过人脸,正在尝试重新导入\n")
+                #清空dataset文件夹
+                for root, dirs, files in os.walk('dataset'):
+                    for name in files:
+                        os.remove(os.path.join(root, name))
+                print("\n已经清空dataset文件夹\n")
+        except Exception as e:
+            print("导入人脸出现问题,请联系管理员", str(e))
+        finally:
+            count = 0  # 人脸图像的初始数量
+    else:
+        print('拒绝更换人脸\n')
+        return
 
     # 3.输入学号
     student_ID = 2021520542
@@ -109,8 +115,7 @@ def sign_in(s,stu_number):
     recognizer_create = cv2.face.LBPHFaceRecognizer_create()
     recognizer_create.read('face_model.yml')  # 读取训练好的模型
     flag = 0  # 标记次数
-    start_time = time.time()  # 系统时间提取
-    duration = 25  # 持续时间
+
     ID = 'Unkonw'
     font = cv2.FONT_HERSHEY_SIMPLEX  # 定义字体，使用opencv中的FONT_HERSHEY_SIMPLEX字体
 
@@ -145,7 +150,7 @@ def sign_in(s,stu_number):
                         flag += 1
                     else:
                         ID = 'unknow'
-            cv2.putText(frame, str(ID), (x, y-10), font, 0.8, (0, 0, 255), 2)  # 添加字幕
+            cv2.putText(frame, stu_number, (x, y-10), font, 0.8, (0, 0, 255), 2)  # 添加字幕
 
         cv2.putText(frame, 'press "esc" to quit ', (10, 20), font, 0.8, (0, 255, 255), 2)  # 在窗口上添加文字，参数依次表示：图像、要添加的文字、文字的位置、字体、字体大小、颜色、粗细
         cv2.imshow("picture from a cammre", frame)  # 打开窗口的名称
