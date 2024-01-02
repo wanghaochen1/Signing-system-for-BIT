@@ -6,6 +6,7 @@ import send_client
 import read_from_server
 
 s=None#定义全局变量s，用于指定socket
+stu_number=None#定义全局变量stu_number，用于指定学号
 Var_Pass=False
 #定义socket连接函数
 def socket_connect(host,port):
@@ -24,13 +25,16 @@ def socket_send_recv(send_data):
     global s#使用全局变量socket
     s.sendall(send_data.encode())#发送数据
     recv_data = s.recv(1024)#接收数据
-    return recv_data.decode()
+    return recv4_data.decode()
 
 
 #定义登陆认证函数
 def comp(window_connect,stu_num,stu_password):
+    global stu_number
     global Var_Pass#使用全局的Var_Pass
     #测试能否连接到server
+    #给学号赋值
+    stu_number=stu_num
     print("\n正在等待老师打开签到连接\n")
     socket_connect('192.168.21.216', 12345)
     print("\n可以开始签到,正在进行登陆认证\n")
@@ -75,6 +79,7 @@ window_1.mainloop()
 
 #判断是否成功登陆：
 if Var_Pass is True:
-    GUI_fun.Sign_window(s)
+    print(f"已成功登陆，学号为{stu_number}")
+    GUI_fun.Sign_window(s,stu_number)
 else:
     print("请重启界面")

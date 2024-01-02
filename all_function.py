@@ -9,6 +9,7 @@ from datetime import datetime
 import cv2
 import time
 import send_client
+import read_from_server
 
 #人脸采集函数
 def capture_face(s):
@@ -99,24 +100,10 @@ def train(s):
     print('模型已保存')
 
 #人脸识别签到
-def sign_in(s):
-    def sign_name(idx, name):
-        style0 = xlwt.easyxf('font:height 240,bOld on,color_index red', num_format_str='DD:MM HH:MM')  # 样式0
-        style1 = xlwt.easyxf('font:height 240,bOld on,color_index blue')  # 样式1
-        workbook = xlrd.open_workbook('签到表.xls')  # 读取excel文件
-        newbook = copy(workbook)  # 复制文件
-        newsheet = newbook.get_sheet(0)  # 在源文件上追加
-        newsheet.write(idx, 4, datetime.now(), style0)  # 第idx行，第4列，写入签到时间，样式为style0（注：代码中的行列是从0开始的）
-        newsheet.write(idx, 3, name, style1)   # 第idx行，第3列，写入签到学生的名字，样式为style1（（注：代码中的行列是从0开始的））
-
-        # 设置列宽
-        newsheet.col(0).width = 256 * 6  # 第0列的列宽为 256 * 6 （256为衡量单位，6表示6个字符宽度）
-        newsheet.col(1).width = 256 * 12  # 第1列的列宽为 256 * 12 （256为衡量单位，12表示12个字符宽度）
-        newsheet.col(2).width = 256 * 10  # 第2列的列宽为 256 * 10 （256为衡量单位，10表示10个字符宽度）
-        newsheet.col(3).width = 256 * 12  # 第3列的列宽为 256 * 12 （256为衡量单位，12表示12个字符宽度）
-        newsheet.col(4).width = 256 * 15  # 第4列的列宽为 256 * 15 （256为衡量单位，15表示15个字符宽度）
-        newbook.save('签到表1.xls')
-
+def sign_in(s,stu_number):
+    def sign_name():
+        send_client.sign_in(stu_number,datetime.now().strftime('%Y-%m-%d %H:%M:%S'),s)
+        return read_from_server.identify_result(s)
     # 3. 导入模块，初始化变量
     classifier = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     recognizer_create = cv2.face.LBPHFaceRecognizer_create()
@@ -163,12 +150,12 @@ def sign_in(s):
         cv2.putText(frame, 'press "esc" to quit ', (10, 20), font, 0.8, (0, 255, 255), 2)  # 在窗口上添加文字，参数依次表示：图像、要添加的文字、文字的位置、字体、字体大小、颜色、粗细
         cv2.imshow("picture from a cammre", frame)  # 打开窗口的名称
         if flag > 5:
-            sign_name(index[0], name)
-            print('签到成功')
-            break
-        if time.time()-start_time > duration:  # 如果超时，则签到失败
-            print('签到失败！')
-            break
+            if sign_name():
+                print('签到成功')
+                break
+            else:
+                print('签到失败')
+                break
         if kk == 27:  # 如果退出
             print('程序被终止，请重新签到！')
             break

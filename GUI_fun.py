@@ -4,7 +4,7 @@ import os
 import tkinter as tk
 import time
 import all_function
-def Sign_window(s):
+def Sign_window(s,stu_num):
     # BEGIN: abpxx6d04wxr
     # 第四步：设计GUI
     # END: abpxx6d04wxr
@@ -22,7 +22,7 @@ def Sign_window(s):
     def train_face():
         all_function.train(s)  # 执行python train.py命令
     def sign_with_face():
-        all_function.sign_in(s)  # 执行python sign_in.py命令
+        all_function.sign_in(s,stu_num)  # 执行python sign_in.py命令
     def function4():
         os.startfile(os.getcwd()+'/签到表1.xls')  # 打开'签到表1.xls'文件
     def function5():

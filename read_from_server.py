@@ -11,4 +11,6 @@ def identify_result(s):
     #如果是登陆信息：
     if data['usage'] == 'login':
         return data['result']
-    
+    #如果是签到信息：
+    if data['usage'] == 'sign_in':
+        return data['result']
