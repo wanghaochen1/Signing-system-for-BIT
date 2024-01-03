@@ -25,8 +25,11 @@ def Sign_window(s,stu_num):
         all_function.sign_in(s,stu_num)  # 执行python sign_in.py命令
     def function4():
         os.startfile(os.getcwd()+'/签到表1.xls')  # 打开'签到表1.xls'文件
-    def function5():
-        os.startfile(os.getcwd()+'/基于OpenCV的人脸识别说明文档.docx')  # 打开说明文档
+    def signout():
+        if all_function.sign_out(s,stu_num):
+            print("签退成功")
+        else:
+            print("签退失败")
     def function6():
         windows.destroy()
         s.close()
@@ -56,8 +59,8 @@ def Sign_window(s,stu_num):
     tk.Button(windows,text='查 看 签 到 表', font=('黑体', 20, 'bold'), fg='white',
              bg='#0D47A1', command=function4).grid(padx=7, pady=5, sticky=tk.W+tk.E)
 
-    tk.Button(windows,text='查看项目说明文档', font=('黑体', 20, 'bold'), fg='white',
-             bg='#0D47A1', command=function5).grid(padx=7, pady=5, sticky=tk.W+tk.E)
+    tk.Button(windows,text='  签      退  ', font=('黑体', 20, 'bold'), fg='white',
+             bg='#0D47A1', command=signout).grid(padx=7, pady=5, sticky=tk.W+tk.E)
 
     tk.Button(windows,text='  退      出  ', font=('黑体', 20, 'bold'), fg='white',
              bg='#0D47A1', command=function6).grid(padx=7, pady=5, sticky=tk.W+tk.E)

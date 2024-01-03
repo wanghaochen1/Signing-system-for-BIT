@@ -168,3 +168,8 @@ def sign_in(s,stu_number):
     # 6.退出程序
     capture.release()  # 释放变量
     cv2.destroyAllWindows()  # 检查有无打开窗口，有的话关掉
+
+    #签退
+def sign_out(s,stu_number):
+    send_client.sign_out(stu_number,s)
+    return read_from_server.identify_result(s)

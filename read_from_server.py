@@ -16,3 +16,5 @@ def identify_result(s):
         return data['result']
     if data['usage'] == 'change_face':
         return data['result']
+    if data['usage'] == 'sign_out':
+        return data['result']
