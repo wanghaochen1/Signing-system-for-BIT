@@ -56,7 +56,7 @@ def Sign_window(s,stu_num):
     tk.Button(windows,text='识 别 签 到', font=('黑体', 20, 'bold'), fg='white',
              bg='#0D47A1', command=sign_with_face).grid(padx=7, pady=5, sticky=tk.W+tk.E)
 
-    tk.Button(windows,text='查 看 签 到 表', font=('黑体', 20, 'bold'), fg='white',
+    tk.Button(windows,text='用 户 画 像', font=('黑体', 20, 'bold'), fg='white',
              bg='#0D47A1', command=function4).grid(padx=7, pady=5, sticky=tk.W+tk.E)
 
     tk.Button(windows,text='  签      退  ', font=('黑体', 20, 'bold'), fg='white',

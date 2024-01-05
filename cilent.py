@@ -4,6 +4,8 @@ import tkinter as tk
 import GUI_fun
 import send_client
 import read_from_server
+import os
+from PIL import Image, ImageTk
 
 s=None#定义全局变量s，用于指定socket
 stu_number=None#定义全局变量stu_number，用于指定学号
@@ -50,6 +52,16 @@ def create_window():
     window_connect.geometry("500x500+1000+100")
     #创建标签
     tk.Label(window_connect,text="统一身份认证登陆",bg='maroon',fg='white',font=('宋体',20),width=30,height=2).pack()
+
+    #在窗口的最上端的中间，创建一个图片，放入dataset中的图片
+    canvas=tk.Canvas(window_connect,height=200,width=500)
+    image_path = os.path.join('dataset', 'caixukun.1120210529.0.jpg')
+    image = Image.open(image_path)
+    window_connect.photo = ImageTk.PhotoImage(image)   # 修改这里
+    image=canvas.create_image(250,0,anchor='n',image=window_connect.photo)  # 修改这里
+    canvas.pack(side='top')
+
+    
 
     #定义学号输入框
     tk.Label(window_connect,text="学号",font=('宋体',20),width=30).pack()
