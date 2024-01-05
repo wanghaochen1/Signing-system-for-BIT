@@ -40,7 +40,7 @@ def capture_face(s,stu_number):
         return
 
     # 3.输入学号
-    student_ID = 2021520542
+    student_ID = 1120210529
 
     # 4.采集图像
     capture = cv2.VideoCapture(0)  # 打开电脑的内置摄像头
@@ -144,6 +144,7 @@ def sign_in(s,stu_number):
                 if conf < 60:
                     index = [list for list, i in enumerate(stu_num) if i == str(label)]  # 得到预测学号在excel表格中所在的行数（注：index的值是从0开始的，index=3表示在excel表格中的第4行）
                     # print(index)
+                    flag+=1;
                     if index != []:
                         name = stu_name[index[0]]
                         ID = stu_name[index[0]]

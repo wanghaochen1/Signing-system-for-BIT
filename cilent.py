@@ -29,7 +29,7 @@ def comp(window_connect,stu_num,stu_password):
     #给学号赋值
     stu_number=stu_num
     print("\n正在等待老师打开签到连接\n")
-    socket_connect('192.168.21.216', 12345)
+    socket_connect('127.0.0.1', 12345)
     print("\n可以开始签到,正在进行登陆认证\n")
     #检查账号密码是否正确
     send_client.login(stu_num,stu_password,s)
