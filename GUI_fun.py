@@ -24,7 +24,9 @@ def Sign_window(s,stu_num):
     def sign_with_face():
         all_function.sign_in(s,stu_num)  # 执行python sign_in.py命令
     def function4():
-        os.startfile(os.getcwd()+'/签到表1.xls')  # 打开'签到表1.xls'文件
+        time=all_function.show_user_image(s,stu_num)  # 执行python show_user_image.py命令
+        #创建一个新的窗口
+        all_function.user_image_GUI(stu_num,time)
     def signout():
         if all_function.sign_out(s,stu_num):
             print("签退成功")
@@ -48,22 +50,22 @@ def Sign_window(s,stu_num):
     tick()#调用tick函数
 
     tk.Button(windows,text='采 集 人 脸 图 像', font=('黑体', 20, 'bold'), fg='white',
-             bg='#0D47A1', command=capture_face).grid(padx=7, pady=5, sticky=tk.W+tk.E)
+             bg='maroon', command=capture_face).grid(padx=7, pady=5, sticky=tk.W+tk.E)
 
     tk.Button(windows,text='训 练 模 型', font=('黑体', 20, 'bold'), fg='white',
-             bg='#0D47A1', command=train_face).grid(padx=7, pady=5, sticky=tk.W+tk.E)
+             bg='green', command=train_face).grid(padx=7, pady=5, sticky=tk.W+tk.E)
 
     tk.Button(windows,text='识 别 签 到', font=('黑体', 20, 'bold'), fg='white',
-             bg='#0D47A1', command=sign_with_face).grid(padx=7, pady=5, sticky=tk.W+tk.E)
+             bg='maroon', command=sign_with_face).grid(padx=7, pady=5, sticky=tk.W+tk.E)
 
     tk.Button(windows,text='用 户 画 像', font=('黑体', 20, 'bold'), fg='white',
-             bg='#0D47A1', command=function4).grid(padx=7, pady=5, sticky=tk.W+tk.E)
+             bg='green', command=function4).grid(padx=7, pady=5, sticky=tk.W+tk.E)
 
     tk.Button(windows,text='  签      退  ', font=('黑体', 20, 'bold'), fg='white',
-             bg='#0D47A1', command=signout).grid(padx=7, pady=5, sticky=tk.W+tk.E)
+             bg='maroon', command=signout).grid(padx=7, pady=5, sticky=tk.W+tk.E)
 
     tk.Button(windows,text='  退      出  ', font=('黑体', 20, 'bold'), fg='white',
-             bg='#0D47A1', command=function6).grid(padx=7, pady=5, sticky=tk.W+tk.E)
+             bg='green', command=function6).grid(padx=7, pady=5, sticky=tk.W+tk.E)
 
     tk.Button(windows,text='学号:1120210529   姓名：王昊宸', font=('仿宋', 20, 'bold'), fg='black',
              bg='white').grid(padx=20, pady=50, sticky=tk.W+tk.E)

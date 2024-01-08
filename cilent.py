@@ -6,6 +6,7 @@ import send_client
 import read_from_server
 import os
 from PIL import Image, ImageTk
+import all_function
 
 s=None#定义全局变量s，用于指定socket
 stu_number=None#定义全局变量stu_number，用于指定学号
@@ -31,7 +32,7 @@ def comp(window_connect,stu_num,stu_password):
     #给学号赋值
     stu_number=stu_num
     print("\n正在等待老师打开签到连接\n")
-    socket_connect('127.0.0.1', 12345)
+    socket_connect('127.0.0.1',12345)
     print("\n可以开始签到,正在进行登陆认证\n")
     #检查账号密码是否正确
     send_client.login(stu_num,stu_password,s)
@@ -47,6 +48,12 @@ def comp(window_connect,stu_num,stu_password):
 
 #定义初始连接界面
 def create_window():
+    def fun_temp():
+        if all_function.log_in_with_face():
+            comp(window_connect,'1120210529','123456')
+        else:
+            print("人脸识别登陆失败")
+        return
     window_connect=tk.Tk()
     window_connect.title("登陆界面")
     window_connect.geometry("500x500+1000+100")
@@ -61,7 +68,9 @@ def create_window():
     image=canvas.create_image(250,0,anchor='n',image=window_connect.photo)  # 修改这里
     canvas.pack(side='top')
 
-    
+    #创建一个按钮，上面写着人脸识别登陆
+    tk.Button(window_connect,text="人脸识别登陆",font=('宋体',20),width=15,command=lambda:fun_temp()).pack()
+
 
     #定义学号输入框
     tk.Label(window_connect,text="学号",font=('宋体',20),width=30).pack()

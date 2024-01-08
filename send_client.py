@@ -44,6 +44,12 @@ def sign_out(stu_num,s):
     s.sendall(json_str.encode())
     return
 
-
+def user_image(s,stu_num):
+    data={
+        'usage':'user_image',
+        'stu_num':stu_num,}
+    json_str=json.dumps(data)
+    s.sendall(json_str.encode())
+    return
 
     

@@ -10,7 +10,83 @@ import cv2
 import time
 import send_client
 import read_from_server
+import tkinter as tk
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import numpy as np
+import userimage
+#引入库~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+def user_image_GUI(stu_number,time):
+    class Ball:
+        def __init__(self, canvas, windows, x, y, dx, dy):
+            self.canvas = canvas
+            self.windows = windows
+            self.x = x
+            self.y = y
+            self.dx = dx
+            self.dy = dy
+            self.ball = canvas.create_oval(x, y, x+100, y+100, fill='red')
+            self.text = canvas.create_text((x+x+100)/2, (y+y+100)/2, text='学霸',font=('宋体',20))
+
+        def move(self):
+            self.canvas.move(self.ball, self.dx, self.dy)
+            self.canvas.move(self.text, self.dx, self.dy)  # 移动文本与球同步
+            if self.canvas.winfo_width() < self.x + 50 or self.x < 0:
+                self.dx = -self.dx
+            if self.canvas.winfo_height() < self.y + 50 or self.y < 0:
+                self.dy = -self.dy
+            self.x += self.dx
+            self.y += self.dy
+
+        def animate(self):
+            self.move()
+            self.windows.after(20, self.animate)  # 20毫秒后再次调用animate
+    #创建一个新的窗口
+    windows = tk.Tk()  # 创建windows的窗口
+    windows.title('你的用户画像')  # 窗口名称
+    windows.geometry('500x600+1000+100')
+    #获得签到情况
+    [morning_in,morning_out,night_in,night_out]=userimage.count(time)
+    #记录总签到时间
+    classtime=userimage.class_time(time)
+    #创建一个文字框
+    label_head=tk.Label(windows,text=f"你本月一共签到/退 {morning_in+night_in} 次，其中下午签到/退 {night_in} 次",bg='maroon',fg='white',font=('宋体',15),width=60,height=2)
+    label_head.pack()
+    #创建一个文字框
+    label_type=tk.Label(windows,text=f"本学期累计上课时间{classtime}",bg='blue',fg='white',font=('宋体',20),width=40,height=2)
+    label_type.pack()
+    
+    #绘制历次签到时间图
+    x = range(len(time))  # 假设 x 是一个表示时间序列的列表
+    fig, ax = plt.subplots(figsize=(5, 2))
+    if len(x) > len(time):
+        x = x[:len(time)]
+    # 如果 time 的长度大于 x 的长度，截取 time
+    elif len(time) > len(x):
+        time = time[:len(x)]
+
+    ax.plot(x, time)
+    ax.legend(["Sign in","Sign out"], loc='upper right')
+    canvas = FigureCanvasTkAgg(fig, master=windows)  # A tk.DrawingArea.
+    canvas.draw()
+    canvas.get_tk_widget().pack()
+    #预测下次签到时间
+    pre_time=userimage.predict_next_checkin(time)
+    label_head=tk.Label(windows,text=f"你下次签到时间可能是{pre_time},仅供参考",bg='maroon',fg='white',font=('宋体',10),width=60,height=2)
+    label_head.pack()
+    #写荣誉称号
+    label_head=tk.Label(windows,text="获得荣誉称号*学霸*",bg='green',fg='white',font=('宋体',20),width=30,height=2)
+    label_head.pack()
+    #绘制小球动画
+    canvas = tk.Canvas(windows, width=400, height=400)
+    canvas.pack()
+    ball = Ball(canvas, windows,0, 0, 2.5, 2.5)
+
+    ball.animate()
+    #绘制小球动画
+    #根据time返回的数据，创建一个图片，使用plot
+    windows.mainloop()
 #人脸采集函数
 def capture_face(s,stu_number):
     send_client.change_face(s,stu_number)
@@ -174,3 +250,56 @@ def sign_in(s,stu_number):
 def sign_out(s,stu_number):
     send_client.sign_out(stu_number,s)
     return read_from_server.identify_result(s)
+
+def show_user_image(s,stu_number):
+    send_client.user_image(s,stu_number)
+    return read_from_server.identify_result(s)
+
+def log_in_with_face():
+    # 3. 导入模块，初始化变量
+    classifier = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    recognizer_create = cv2.face.LBPHFaceRecognizer_create()
+    recognizer_create.read('face_model.yml')  # 读取训练好的模型
+    flag = 0  # 标记次数
+
+    ID = 'Unkonw'
+    font = cv2.FONT_HERSHEY_SIMPLEX  # 定义字体，使用opencv中的FONT_HERSHEY_SIMPLEX字体
+
+    # 4. 导入应到学生名单
+    workbook = xlrd.open_workbook('签到表.xls')  # 导入考勤记录表
+    worksheet = workbook.sheet_by_index(0)  # 打开工作表
+    stu_num = worksheet.col_values(1)  # 提取工作表第1列，第1列为学生学号
+    stu_name = worksheet.col_values(2)  # 提取工作表第2列，第2列为学生名字
+
+    # 5.识别签到
+    capture = cv2.VideoCapture(0)  # 打开摄像头
+
+    while capture.isOpened():  # 当打开摄像头的时候
+        kk = cv2.waitKey(1)  # 等待键盘的输入
+        _, frame = capture.read()  # 读取摄像头内容
+        gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)  # 将读取到的RGB图像转换为灰度图像
+        faces = classifier.detectMultiScale(gray, 1.3, 5)  # 让classifier判断人脸，detectMultiScale函数可以检测出图像中的人脸
+        if len(faces) != 0:  # 如果能找到人脸
+            # 框选人脸
+            for x, y, w, h in faces:
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2)  # 用矩形框框出人脸，xy为左上角的坐标，w为宽，h为高
+                roi_face = gray[y:y + h, x:x + w]
+                label, conf = recognizer_create.predict(roi_face)  # 预测出的学号和可信度
+                # print(label,conf)
+
+                if conf < 60:
+                    flag+=1;
+
+        cv2.putText(frame, 'press "esc" to quit ', (10, 20), font, 0.8, (0, 255, 255), 2)  # 在窗口上添加文字，参数依次表示：图像、要添加的文字、文字的位置、字体、字体大小、颜色、粗细
+        cv2.imshow("picture from a cammre", frame)  # 打开窗口的名称
+        if flag > 5:
+            capture.release()  # 释放变量
+            cv2.destroyAllWindows()  # 检查有无打开窗口，有的话关掉
+            return True
+        if kk == 27:  # 如果退出
+            print('程序被终止，请重新签到！')
+            break
+
+    # 6.退出程序
+    capture.release()  # 释放变量
+    cv2.destroyAllWindows()  # 检查有无打开窗口，有的话关掉

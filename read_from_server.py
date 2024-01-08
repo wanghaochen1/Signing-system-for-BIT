@@ -1,5 +1,6 @@
 import json
-
+import datetime
+from datetime import datetime
 def identify_result(s):
     try:
         receivedata = s.recv(10240)
@@ -18,3 +19,13 @@ def identify_result(s):
         return data['result']
     if data['usage'] == 'sign_out':
         return data['result']
+    if data['usage'] == 'user_image':
+        time_str=data['result']
+        dates = []  # 定义 dates
+        for row in time_str:
+            date_row = []
+            for date_string in row:
+                date = datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%S.%f")
+                date_row.append(date)
+            dates.append(date_row)
+        return dates
